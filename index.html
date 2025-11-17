@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Canciones - Acordes y Letras</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #121212 0%, #1a1a1a 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #1db954, #1ed760);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #b3b3b3;
+            font-size: 1.1em;
+        }
+
+        .search-bar {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 15px 20px;
+            background: #282828;
+            border: none;
+            border-radius: 25px;
+            color: #fff;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            background: #333;
+            box-shadow: 0 0 0 2px #1db954;
+        }
+
+        .search-bar input::placeholder {
+            color: #b3b3b3;
+        }
+
+        .songs-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .song-item {
+            background: #181818;
+            border-radius: 8px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 15px;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .song-item:hover {
+            background: #282828;
+            border-color: #1db954;
+            transform: translateX(5px);
+        }
+
+        .song-cover {
+            width: 80px;
+            height: 80px;
+            border-radius: 6px;
+            object-fit: cover;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .song-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .song-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .song-artist {
+            color: #b3b3b3;
+            font-size: 0.95em;
+        }
+
+        .song-meta {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .song-key {
+            background: #1db954;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .play-icon {
+            width: 40px;
+            height: 40px;
+            background: #1db954;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .song-item:hover .play-icon {
+            opacity: 1;
+        }
+
+        .play-icon svg {
+            width: 20px;
+            height: 20px;
+            fill: #000;
+            margin-left: 3px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #181818;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1db954;
+        }
+
+        .stat-label {
+            color: #b3b3b3;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .song-item {
+                grid-template-columns: 60px 1fr;
+                gap: 10px;
+            }
+
+            .song-cover {
+                width: 60px;
+                height: 60px;
+            }
+
+            .song-meta {
+                grid-column: 2;
+                margin-top: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎸Canciones</h1>
+            <p class="subtitle">Acordes y letras</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalSongs">0</div>
+                <div class="stat-label">Canciones</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalArtists">0</div>
+                <div class="stat-label">Artistas</div>
+            </div>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Buscar canciones, artistas...">
+        </div>
+
+        <div class="songs-list" id="songsList"></div>
+    </div>
+
+    <script>
+        // Datos de ejemplo - aquí irían tus canciones
+        const songs = [
+            {
+                id: 1,
+                title: "Mas el Dios de toda gracia",
+                artist: "Marcos Witt",
+                key: "G",
+                cover: "image/1.png",
+                page: "1.html"
+            },
+            {
+                id: 2,
+                title: "Tu fidelidad",
+                artist: "Marcos Witt",
+                key: "D",
+                cover: "image/2.jpg",
+                page: "2.html"
+            },
+            {
+                id: 3,
+                title: "Hermoso eres",
+                artist: "Marcos Witt",
+                key: "D",
+                cover: "image/3.jpg",
+                page: "3.html"
+            },
+            {
+                id: 4,
+                title: "Cuan bello es el señor",
+                artist: "Marcos Witt",
+                key: "Bm",
+                cover: "image/4.jpg",
+                page: "4.html"
+            },
+            {
+                id: 5,
+                title: "Yo te busco",
+                artist: "Marcos Witt",
+                key: "C",
+                cover: "image/5.jpg",
+                page: "5.html"
+            },
+            {
+                id: 6,
+                title: "Es tiempo",
+                artist: "Hillsong",
+                key: "A",
+                cover: "image/6.jpeg",
+                page: "6.html"
+            },
+            {
+                id: 7,
+                title: "Su hijo dio",
+                artist: "Hillsong",
+                key: "Fm",
+                cover: "image/7.jpg",
+                page: "7.html"
+            },
+            {
+                id: 8,
+                title: "Lo haras otra vez",
+                artist: "Elevation Worship",
+                key: "F",
+                cover: "image/8.jpg",
+                page: "8.html"
+            },
+            {
+                id: 9,
+                title: "Amor sin condición",
+                artist: "Bethel",
+                key: "Em",
+                cover: "image/9.jpeg",
+                page: "9.html"
+            },
+            {
+                id: 10,
+                title: "Dios poderoso",
+                artist: "IBI",
+                key: "Dm",
+                cover: "image/10.jpg",
+                page: "10.html"
+            },
+            {
+                id: 11,
+                title: "El Dios que adoramos",
+                artist: "IBI",
+                key: "G",
+                cover: "image/11.jpg",
+                page: "11.html"
+            },
+            {
+                id: 12,
+                title: "Por encima del sol",
+                artist: "Jonathan & Sarah Jerez",
+                key: "F",
+                cover: "image/12.jpg",
+                page: "12.html"
+            },
+            {
+                id: 13,
+                title: "Santo por siempre",
+                artist: "Eccos",
+                key: "G",
+                cover: "image/13.jpeg"
+            },
+            {
+                id: 14,
+                title: "Desde mi interior",
+                artist: "Hillsong",
+                key: "F",
+                cover: "image/14.jpg"
+            },
+            {
+                id: 15,
+                title: "Hossana",
+                artist: "Hillsong",
+                key: "Cm",
+                cover: "image/15.jpg"
+            },
+            {
+                id: 16,
+                title: "Dios imparable",
+                artist: "Marcos Witt",
+                key: "A",
+                cover: "image/16.jpg"
+            },
+            {
+                id: 17,
+                title: "Te alabare",
+                artist: "Rojo",
+                key: "E",
+                cover: "image/17.jpg"
+            },
+            {
+                id: 18,
+                title: "Abre mis ojos oh cristo",
+                artist: "Danilo Montero",
+                key: "D",
+                cover: "image/18.jpeg"
+            },
+            {
+                id: 19,
+                title: "Cuan gloriosa sera la mañana",
+                artist: "Sonido Cristiano",
+                key: "C",
+                cover: "image/19.jpg"
+            },
+            {
+                id: 20,
+                title: "Grande y poderos oh Dios",
+                artist: "Marcos Witt",
+                key: "Dm",
+                cover: "image/20.jpg"
+            },
+            {
+                id: 21,
+                title: "Tu haras",
+                artist: "Marcos Witt",
+                key: "Cm",
+                cover: "image/21.jpeg"
+            },
+             {
+                id: 22,
+                title: "Gracia sublime",
+                artist: "Phil Wickham",
+                key: "A",
+                cover: "image/22.jpg"
+            },
+             {
+                id: 23,
+                title: "Alaba",
+                artist: "Evan Craft",
+                key: "F",
+                cover: "image/23.jpg"
+            },
+             {
+                id: 24,
+                title: "Danzando",
+                artist: "Christine D’Clario",
+                key: "Bm",
+                cover: "image/24.jpeg"
+            },
+             {
+                id: 25,
+                title: "Somos el pueblo de Dios",
+                artist: "Marcos Witt",
+                key: "E",
+                cover: "image/25.jpg"
+            },
+             {
+                id: 26,
+                title: "Bartimeo",
+                artist: "Puerto Seguro",
+                key: "Dm",
+                cover: "image/26.jpeg"
+            },
+            {
+                id: 27,
+                title: "Contigo",
+                artist: "Nezareth & Twice",
+                key: "A",
+                cover: "image/27.jpeg"
+            },
+            {
+                id: 28,
+                title: "Socorro",
+                artist: "Un corazon",
+                key: "A",
+                cover: "image/28.jpg"
+            },
+        ];
+
+        let filteredSongs = [...songs];
+
+        function renderSongs(songsToRender) {
+            const songsList = document.getElementById('songsList');
+            songsList.innerHTML = '';
+
+            songsToRender.forEach(song => {
+                const songItem = document.createElement('div');
+                songItem.className = 'song-item';
+                songItem.onclick = () => openSong(song.id);
+                
+                songItem.innerHTML = `
+                    <img src="${song.cover}" alt="${song.title}" class="song-cover">
+                    <div class="song-info">
+                        <div class="song-title">${song.title}</div>
+                        <div class="song-artist">${song.artist}</div>
+                    </div>
+                    <div class="song-meta">
+                        <div class="song-key">${song.key}</div>
+                        <div class="play-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+                
+                songsList.appendChild(songItem);
+            });
+        }
+
+        function openSong(songId) {
+            const song = songs.find(s => s.id === songId);
+    
+            if (song && song.page) {
+                window.location.href = song.page;
+            } else {
+                alert('Página no encontrada para esta canción');
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalSongs').textContent = songs.length;
+            const uniqueArtists = new Set(songs.map(s => s.artist));
+            document.getElementById('totalArtists').textContent = uniqueArtists.size;
+        }
+
+        // Búsqueda
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filteredSongs = songs.filter(song => 
+                song.title.toLowerCase().includes(searchTerm) ||
+                song.artist.toLowerCase().includes(searchTerm) ||
+                song.key.toLowerCase().includes(searchTerm)
+            );
+            renderSongs(filteredSongs);
+        });
+
+        // Inicializar
+        renderSongs(songs);
+        updateStats();
+
+        // Guarda el scroll antes de ir a cualquier canción
+        document.addEventListener('DOMContentLoaded', function() {
+            const songLinks = document.querySelectorAll('.song-item');
+            
+            songLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    sessionStorage.setItem('indexScrollPos', window.scrollY);
+                });
+            });
+            
+            // Restaura el scroll al regresar
+            window.addEventListener('load', function() {
+                const savedPos = sessionStorage.getItem('indexScrollPos');
+                if (savedPos) {
+                    setTimeout(() => {
+                        window.scrollTo(0, parseInt(savedPos));
+                    }, 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
