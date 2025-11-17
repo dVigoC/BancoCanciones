@@ -545,7 +545,7 @@
         function toggleChords() {
             chordsVisible = !chordsVisible;
             // Oculta/muestra los acordes y las líneas de acordes (para el formato de bloque)
-            const elementsToToggle = document.querySelectorAll('.chord, .chord-line, .ponte-section');
+            const elementsToToggle = document.querySelectorAll('.chord, .chord-line');
             elementsToToggle.forEach(chord => {
                 chord.style.display = chordsVisible ? '' : 'none';
             });

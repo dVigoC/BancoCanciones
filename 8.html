@@ -548,7 +548,7 @@
 
         function toggleChords() {
             chordsVisible = !chordsVisible;
-            const chords = document.querySelectorAll('.chord, .chord-line, .ponte-section');
+            const chords = document.querySelectorAll('.chord, .chord-line');
             chords.forEach(chord => {
                 chord.style.display = chordsVisible ? '' : 'none';
             });
