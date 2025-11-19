@@ -1,3 +1,3 @@
 git add .
-git commit -m "Descripción de los cambios realizados, agregando 16,17 y actualizando index,8,9"
+git commit -m "Descripción de los cambios realizadosactualizando todas la paginas"
 git push

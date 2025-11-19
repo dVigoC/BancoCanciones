@@ -214,6 +214,13 @@
             margin-bottom: 15px;
             display: block;
         }
+        .verse-label-1{
+            color: #1db954;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: block;
+        }
 
         .ponte-section {
             background: #282828;
@@ -289,7 +296,7 @@
     <div class="song-container">
     
         <div class="lyrics-section" id="lyricsSection">
-            <span class="verse-label">Intro (x2)</span>
+            <span class="verse-label-1">Intro (x2)</span>
             
             <div class="lyrics-line">
                 <div class="chord-line">
@@ -453,7 +460,7 @@
             </div>
 
             <div class="spacer"></div>
-            <span class="verse-label">Solo</span>
+            <span class="verse-label-1">Solo</span>
             <div class="lyrics-line">
                 <div class="chord-line">
                     <span class="chord">Cm</span>
@@ -593,7 +600,7 @@
 
         function toggleChords() {
             chordsVisible = !chordsVisible;
-            const elementsToToggle = document.querySelectorAll('.verse-label,.chord, .chord-line');
+            const elementsToToggle = document.querySelectorAll('.verse-label-1,.chord, .chord-line');
             elementsToToggle.forEach(chord => {
                 chord.style.display = chordsVisible ? '' : 'none';
             });
