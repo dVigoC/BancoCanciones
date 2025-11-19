@@ -219,7 +219,13 @@
             margin-bottom: 15px;
             display: block;
         }
-
+        .verse-label-1{
+             color: #1db954;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: block;
+        }
         .ponte-section {
             background: #282828;
             padding: 20px;
@@ -295,6 +301,27 @@
     <div class="song-container">
     
         <div class="lyrics-section" id="lyricsSection">
+            <span class="verse-label-1">Piano</span>
+            
+            <div class="lyrics-line">
+                <div class="chord-line">
+                    <span style="margin-left: 0px" class="chord">F</span>
+                    <span style="margin-left: 10px" class="chord">C</span>
+                </div>
+            </div>
+            <span class="verse-label-1">Notas:</span>
+             <div class="lyrics-line">
+                <div class="chord-line">
+                    (<span style="margin-left: 0px" class="chord">C</span>
+                    <span style="margin-left: 5px" class="chord">B</span>
+                    <span style="margin-left: 5px" class="chord">A</span>)
+                    (<span style="margin-left: 0px" class="chord">C</span>
+                    <span style="margin-left: 5px" class="chord">B</span>
+                    <span style="margin-left: 5px" class="chord">G</span>)
+                </div>
+            </div>
+
+            <div class="spacer"></div>
             <span class="verse-label">Verso 1</span>
             
             <div class="lyrics-line">
@@ -548,7 +575,7 @@
 
         function toggleChords() {
             chordsVisible = !chordsVisible;
-            const chords = document.querySelectorAll('.chord, .chord-line');
+            const chords = document.querySelectorAll('.verse-label-1,.chord, .chord-line');
             chords.forEach(chord => {
                 chord.style.display = chordsVisible ? '' : 'none';
             });
